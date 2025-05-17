@@ -17,7 +17,7 @@ fi
 
 USERNAME=$(whoami)
 
-if [ "$USERNAME" == 'root' ]
+if [ "$USERNAME" = 'root' ]
 then
   echo "${RED}Do no run this script as root. Instead run it as the same user that OTS will run as.${NC}"
   rm -fr $INSTALLER_DIR
@@ -64,7 +64,7 @@ do
   esac
 done
 
-if [ "$INSTALL_ZEROTIER" == 1 ];
+if [ "$INSTALL_ZEROTIER" = 1 ];
 then
   read -p "${GREEN}What is your ZeroTier network ID? ${NC}" ZT_NETWORK_ID < /dev/tty
   curl -s 'https://raw.githubusercontent.com/zerotier/ZeroTierOne/master/doc/contact%40zerotier.com.gpg' | gpg --import && \
@@ -106,7 +106,7 @@ do
   esac
 done
 
-if [ "$INSTALL_MUMBLE" == 1 ]; then
+if [ "$INSTALL_MUMBLE" = 1 ]; then
   sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv B6391CB2CFBA643D
   sudo apt-add-repository -s "deb http://zeroc.com/download/Ice/3.7/ubuntu`lsb_release -rs` stable main"
 
@@ -125,14 +125,14 @@ if [ "$INSTALL_MUMBLE" == 1 ]; then
 
   sudo service mumble-server restart
 
-  if [[ "$VERSION_ID" == "24.04" ]]; then
+  if [ "$VERSION_ID" = "24.04" ]; then
     PASSWORD_LOG=$(sudo grep -m 1 SuperUser /var/log/syslog)
-    PASSWORD=($PASSWORD_LOG)
-    read -p "${GREEN}Mumble Server is now installed. The SuperUser password is ${YELLOW}${PASSWORD[-1]}${GREEN}. Press enter to continue.${NC}" < /dev/tty
+    PASSWORD=$(echo "$PASSWORD_LOG" | awk '{print $NF}')
+    read -p "${GREEN}Mumble Server is now installed. The SuperUser password is ${YELLOW}${PASSWORD}${GREEN}. Press enter to continue.${NC}" < /dev/tty
   else
     PASSWORD_LOG=$(sudo grep -m 1 SuperUser /var/log/mumble-server/mumble-server.log)
-    PASSWORD=($PASSWORD_LOG)
-    read -p "${GREEN}Mumble Server is now installed. The SuperUser password is ${YELLOW}${PASSWORD[-1]}${GREEN}. Press enter to continue.${NC}" < /dev/tty
+    PASSWORD=$(echo "$PASSWORD_LOG" | awk '{print $NF}')
+    read -p "${GREEN}Mumble Server is now installed. The SuperUser password is ${YELLOW}${PASSWORD}${GREEN}. Press enter to continue.${NC}" < /dev/tty
   fi
 fi
 
@@ -155,11 +155,11 @@ cd ~/ots/mediamtx
 
 ARCH=$(uname -m)
 KERNEL_BITS=$(getconf LONG_BIT)
-if [ "$ARCH" == "x86_64" ]; then
+if [ "$ARCH" = "x86_64" ]; then
   lastversion --filter '~*linux_amd64' --assets download bluenviron/mediamtx --only 1.10.0
-elif [ "$KERNEL_BITS" == 32 ]; then
+elif [ "$KERNEL_BITS" = 32 ]; then
   lastversion --filter '~*linux_armv7' --assets download bluenviron/mediamtx --only 1.10.0
-elif [ "$KERNEL_BITS" == 64 ]; then
+elif [ "$KERNEL_BITS" = 64 ]; then
   lastversion --filter '~*linux_arm64v8' --assets download bluenviron/mediamtx --only 1.10.0
 fi
 
