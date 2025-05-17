@@ -17,13 +17,6 @@ fi
 
 USERNAME=$(whoami)
 
-if [ "$USERNAME" = 'root' ]
-then
-  echo "${RED}Do no run this script as root. Instead run it as the same user that OTS will run as.${NC}"
-  rm -fr $INSTALLER_DIR
-  exit 1
-fi
-
 mkdir -p ~/ots
 
 echo "${GREEN}Installing packages via apt. You may be prompted for your sudo password...${NC}"
